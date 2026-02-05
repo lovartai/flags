@@ -35,7 +35,7 @@ jobs:
           npm version $CANARY_VERSION --no-git-tag-version
           echo "CANARY_VERSION=$CANARY_VERSION" >> $GITHUB_ENV
 
-      - run: pnpm publish --tag canary --no-git-checks
+      - run: pnpm publish --tag canary --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_RELEASE_TOKEN }}
 
