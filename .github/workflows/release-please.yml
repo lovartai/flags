@@ -27,7 +27,8 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          release-type: node
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
 
   publish:
@@ -64,5 +65,5 @@ jobs:
           echo "**Version:** ${{ needs.release-please.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
-          echo "pnpm add @lovart-open/statsig@latest" >> $GITHUB_STEP_SUMMARY
+          echo "pnpm add @lovart-open/flags@latest" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
