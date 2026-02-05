@@ -27,7 +27,13 @@ export {
 export { getLogger, type Logger } from './logger';
 
 // Statsig integration
-export { getStatsigClientSync, initStatsigClient, isTestEnv, type InitOptions } from './statsig';
+export {
+  getStatsigClientSync,
+  initStatsigClient,
+  isTestEnv,
+  type InitOptions,
+  type StatsigBootstrap,
+} from './statsig';
 
 // Core types
 export {
