@@ -5,7 +5,7 @@
 
 import { useFeatureGate } from '@statsig/react-bindings';
 
-import { getStatsigClientSync, isTestEnv } from './statsig';
+import { getStatsigClientSync, isTestEnv } from './client';
 import type { EvaluationOptions, FeatureGate, FlagDefinition, FlagSnapshot, FlagState } from './types';
 
 export interface ResolveOptions extends EvaluationOptions {

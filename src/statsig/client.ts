@@ -5,7 +5,7 @@
 
 import { StatsigClient, type StatsigOptions, type StatsigUser } from '@statsig/js-client';
 
-import { getLogger, type Logger, setLogger } from '../logger';
+import { getLogger, type Logger, setLogger } from './logger';
 
 let client: StatsigClient | null = null;
 let testEnvDetector: (() => boolean) | null = null;

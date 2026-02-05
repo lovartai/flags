@@ -14,9 +14,6 @@ importers:
       '@statsig/react-bindings':
         specifier: ^3.30.2
         version: 3.31.2(react@19.2.4)
-      '@statsig/web-analytics':
-        specifier: ^3.30.0
-        version: 3.31.2
       lodash:
         specifier: ^4.17.21
         version: 4.17.23
@@ -388,9 +385,6 @@ packages:
     resolution: {integrity: sha512-27QFh5CBr/1keZSI7e7fYkaTESrbrM80wgOoLKeZSZ+xUBvP5kC1+UUzX+exIW62svWSf3lnWta2L1LzOapiXQ==}
     peerDependencies:
       react: ^16.6.3 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  '@statsig/web-analytics@3.31.2':
-    resolution: {integrity: sha512-9Y1I9s+7IK6YYK4E7hfSH/82zk2na3TDAKB3E6P6o9Z/E96vCRbfMETKyJKofPweEg35Asec/qcT9rpbDuuurw==}
 
   '@testing-library/dom@10.4.1':
     resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
@@ -915,9 +909,6 @@ packages:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}
     engines: {node: '>=18'}
 
-  web-vitals@5.0.3:
-    resolution: {integrity: sha512-4KmOFYxj7qT6RAdCH0SWwq8eKeXNhAFXR4PmgF6nrWFmrJ41n7lq3UCA6UK0GebQ4uu+XP8e8zGjaDO3wZlqTg==}
-
   webidl-conversions@7.0.0:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
     engines: {node: '>=12'}
@@ -1174,12 +1165,6 @@ snapshots:
       '@statsig/client-core': 3.31.2
       '@statsig/js-client': 3.31.2
       react: 19.2.4
-
-  '@statsig/web-analytics@3.31.2':
-    dependencies:
-      '@statsig/client-core': 3.31.2
-      '@statsig/js-client': 3.31.2
-      web-vitals: 5.0.3
 
   '@testing-library/dom@10.4.1':
     dependencies:
@@ -1732,8 +1717,6 @@ snapshots:
   w3c-xmlserializer@5.0.0:
     dependencies:
       xml-name-validator: 5.0.0
-
-  web-vitals@5.0.3: {}
 
   webidl-conversions@7.0.0: {}
 

@@ -1,16 +1,16 @@
-# statsig
+# @lovart-open/flags
 
-[![CI](https://github.com/lovartai/flags/actions/workflows/ci.yml/badge.svg)](https://github.com/lovartai/flags/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/statsig.svg)](https://www.npmjs.com/package/statsig)
+[![CI](https://github.com/lovartai/statsig/actions/workflows/ci.yml/badge.svg)](https://github.com/lovartai/statsig/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/@lovart-open/flags.svg)](https://www.npmjs.com/package/@lovart-open/flags)
 
 Type-safe Feature Flag and Parameter Store library built on Statsig, with a fully synchronous architecture.
 
 ## Installation
 
 ```bash
-npm install statsig
+npm install @lovart-open/flags
 # or
-pnpm add statsig
+pnpm add @lovart-open/flags
 ```
 
 ## Initialize Statsig
@@ -18,7 +18,7 @@ pnpm add statsig
 Initialize the Statsig client at your app entry point:
 
 ```ts
-import { initStatsigClient } from 'statsig';
+import { initStatsigClient } from '@lovart-open/flags/statsig';
 
 initStatsigClient('your-statsig-client-key', { userID: 'user-123' }, {
   environment: { tier: 'production' },
@@ -38,7 +38,7 @@ initStatsigClient('your-statsig-client-key', { userID: 'user-123' }, {
 ## Define and Create
 
 ```ts
-import { createFlagStore, type FlagDefinition } from 'statsig';
+import { createFlagStore, type FlagDefinition } from '@lovart-open/flags/statsig';
 
 // 1. Define your flags
 const MY_FLAGS = {
@@ -120,7 +120,7 @@ import {
   createParamStore, 
   defineParam, 
   type ParamStoreDefinition 
-} from 'statsig';
+} from '@lovart-open/flags/statsig';
 
 // 1. Define your param stores
 const MY_PARAMS = {
@@ -217,9 +217,15 @@ store.get('currency');  // 'USD' | 'CNY' | 'EUR'
 ## Custom Logger
 
 ```ts
+import { initStatsigClient, setLogger } from '@lovart-open/flags/statsig';
+
+// Option 1: Pass during init
 initStatsigClient('client-xxx', { userID: 'user-123' }, {
-  logger: (message, data) => myLogger.info(message, data),
+  logger: (message) => myLogger.info(message),
 });
+
+// Option 2: Set globally
+setLogger((message) => myLogger.info(message));
 ```
 
 ## E2E Test Support
@@ -234,6 +240,16 @@ initStatsigClient('client-xxx', { userID: 'user-123' }, {
 // playwright/cypress tests
 await page.addInitScript(() => {
   window.__E2E__ = true;
+});
+```
+
+## Server-Side Bootstrap (Zero-Network Init)
+
+```ts
+initStatsigClient('client-xxx', { userID: 'user-123' }, {
+  bootstrap: {
+    data: bootstrapDataFromServer,  // Pre-fetched from BFF
+  },
 });
 ```
 
