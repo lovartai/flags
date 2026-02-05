@@ -1,7 +1,7 @@
 // Mock external dependencies
 const mockGetFeatureGate = vi.fn();
 const mockIsTestEnv = vi.fn(() => false);
-vi.mock('../statsig', () => ({
+vi.mock('../statsig/client', () => ({
   getStatsigClientSync: vi.fn(() => ({
     getFeatureGate: mockGetFeatureGate,
   })),
@@ -10,7 +10,7 @@ vi.mock('../statsig', () => ({
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createFlagStore, type FlagDefinition } from '../flags';
+import { createFlagStore, type FlagDefinition } from '../statsig';
 
 describe('FlagStore', () => {
   const mockFlags = {

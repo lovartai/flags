@@ -7,7 +7,7 @@ import { merge, set } from 'lodash';
 import { useParameterStore } from '@statsig/react-bindings';
 import z from 'zod';
 
-import { getStatsigClientSync, isTestEnv } from './statsig';
+import { getStatsigClientSync, isTestEnv } from './client';
 
 /** Parameter definition */
 export interface ParamDefinition<T = unknown> {

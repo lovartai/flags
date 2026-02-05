@@ -3,15 +3,14 @@ import { z } from 'zod';
 
 // Mock statsig
 const mockIsTestEnv = vi.fn(() => false);
-vi.mock('../statsig', () => ({
+vi.mock('../statsig/client', () => ({
   getStatsigClientSync: vi.fn(() => ({
     getParameterStore: vi.fn(),
   })),
   isTestEnv: () => mockIsTestEnv(),
 }));
 
-import { createParamStore, defineParam, type ParamStoreDefinition } from '../params';
-import { getStatsigClientSync } from '../statsig';
+import { createParamStore, defineParam, type ParamStoreDefinition, getStatsigClientSync } from '../statsig';
 
 describe('ParamStore', () => {
   const testStores = {

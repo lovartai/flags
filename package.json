@@ -1,6 +1,6 @@
 {
-  "name": "@lovart-open/statsig",
-  "version": "1.0.0",
+  "name": "@lovart-open/flags",
+  "version": "0.0.1",
   "description": "Feature flag management with multi-layer priority system (client-side)",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -8,6 +8,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./statsig": {
+      "types": "./src/statsig/index.ts",
+      "default": "./src/statsig/index.ts"
     }
   },
   "files": [
@@ -27,7 +31,6 @@
   "dependencies": {
     "@statsig/js-client": "^3.30.0",
     "@statsig/react-bindings": "^3.30.2",
-    "@statsig/web-analytics": "^3.30.0",
     "lodash": "^4.17.21",
     "zod": "^3.23.0"
   },
