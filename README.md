@@ -1,5 +1,8 @@
 # statsig
 
+[![CI](https://github.com/lovartai/flags/actions/workflows/ci.yml/badge.svg)](https://github.com/lovartai/flags/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/statsig.svg)](https://www.npmjs.com/package/statsig)
+
 Type-safe Feature Flag and Parameter Store library built on Statsig, with a fully synchronous architecture.
 
 ## Installation
