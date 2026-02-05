@@ -33,6 +33,24 @@ export function defineParam<T>(def: ParamDefinition<T>): ParamDefinition<T> {
 const hasWindow = typeof window !== 'undefined';
 const FP_PREFIX = 'fp.';
 
+/** Event name for schema mismatch errors */
+export const PARAM_SCHEMA_MISMATCH_EVENT = 'param-schema-mismatch';
+
+/** Detail payload for schema mismatch event */
+export interface ParamSchemaMismatchDetail {
+  storeKey: string;
+  paramKey: string;
+  source: string;
+  value: unknown;
+  error: z.ZodError;
+}
+
+/** Dispatch schema mismatch event (browser only) */
+function dispatchSchemaMismatchEvent(detail: ParamSchemaMismatchDetail): void {
+  if (!hasWindow) return;
+  window.dispatchEvent(new CustomEvent(PARAM_SCHEMA_MISMATCH_EVENT, { detail }));
+}
+
 /**
  * Parse URL query string for param store overrides (standalone function).
  * Format: ?fp.store.param=value or ?fp.store={"param":"value"}
@@ -242,6 +260,13 @@ export class ParamStore<TStores extends Record<string, ParamStoreDefinition<any>
     const parsed = schema.safeParse(value);
     if (!parsed.success) {
       console.error(`[ParamStore] Schema mismatch (${source}): ${String(storeKey)}.${String(paramKey)}`, value, parsed.error);
+      dispatchSchemaMismatchEvent({
+        storeKey: String(storeKey),
+        paramKey: String(paramKey),
+        source,
+        value,
+        error: parsed.error,
+      });
       const fallbackVal = def.fallback;
       if (source === 'remote') {
         return { value: fallbackVal, source: 'fallback', error: parsed.error };
