@@ -1,8 +1,12 @@
 # 自动版本管理和发布
+#
 # 工作流程:
-# 1. 合并 PR 到 main（使用 Conventional Commits）
-# 2. release-please 自动创建/更新 Release PR
-# 3. 合并 Release PR 后自动发布到 npm
+# 1. 功能分支 (feat/fix/...) 合入 main
+#    → release-please 自动创建/更新 Release PR（含版本号更新和 CHANGELOG）
+# 2. Release PR 合并到 main
+#    → 自动发布到 npm
+# 3. 如果不想发版，关闭 Release PR 即可（下次有新 commit 会重新创建）
+#
 name: Release Please
 
 on:
@@ -18,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
@@ -27,6 +32,7 @@ jobs:
 
   publish:
     needs: release-please
+    # 只有当 Release PR 被合并时才发布
     if: ${{ needs.release-please.outputs.release_created }}
     runs-on: ubuntu-latest
     steps:
@@ -46,6 +52,17 @@ jobs:
 
       - run: pnpm test
 
-      - run: pnpm publish --access public --no-git-checks
+      - name: Publish to npm
+        run: pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_RELEASE_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "### 🚀 Published to npm" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.release-please.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "pnpm add @lovart-open/statsig@latest" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
