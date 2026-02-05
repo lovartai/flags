@@ -14,6 +14,7 @@ export { createFlagStore, FlagStore, parseUrlOverrides, type ResolveOptions } fr
 export {
   createParamStore,
   defineParam,
+  parseParamStoreUrlOverrides,
   ParamStore,
   type ParamDefinition,
   type ParamResolveOptions,

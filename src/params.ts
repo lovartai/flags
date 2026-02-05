@@ -30,6 +30,64 @@ export function defineParam<T>(def: ParamDefinition<T>): ParamDefinition<T> {
   return def;
 }
 
+const hasWindow = typeof window !== 'undefined';
+const FP_PREFIX = 'fp.';
+
+/**
+ * Parse URL query string for param store overrides (standalone function).
+ * Format: ?fp.store.param=value or ?fp.store={"param":"value"}
+ *
+ * @example
+ * parseParamStoreUrlOverrides('?fp.config.debug=true')
+ * // => { config: { debug: true } }
+ */
+export function parseParamStoreUrlOverrides(search?: string): Record<string, Record<string, unknown>> {
+  const searchString = search ?? (hasWindow ? window.location.search : '');
+  const params = new URLSearchParams(searchString);
+  const result: Record<string, Record<string, unknown>> = {};
+
+  for (const [key, value] of params.entries()) {
+    if (!key.startsWith(FP_PREFIX)) continue;
+    const rest = key.slice(FP_PREFIX.length);
+    const dotIndex = rest.indexOf('.');
+
+    if (dotIndex >= 0) {
+      const path = rest;
+      const coerced = tryCoerceBasic(value);
+      set(result, path, coerced);
+    } else {
+      const path = rest;
+      try {
+        const obj = JSON.parse(value);
+        if (typeof obj === 'object' && obj !== null && !Array.isArray(obj)) {
+          result[path] = merge(result[path] ?? {}, obj);
+        }
+      } catch {
+        // ignore
+      }
+    }
+  }
+  return result;
+}
+
+/** Basic type coercion without schema (for standalone parse function) */
+function tryCoerceBasic(raw: string): unknown {
+  const trimmed = raw.trim();
+  if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
+    try {
+      return JSON.parse(trimmed);
+    } catch {
+      // ignore
+    }
+  }
+  const num = Number(raw);
+  if (!Number.isNaN(num) && raw !== '') return num;
+  if (raw === 'true') return true;
+  if (raw === 'false') return false;
+  if (raw === 'null') return null;
+  return raw;
+}
+
 /** Try to coerce string value to the expected type based on schema */
 function tryCoerce(raw: string, def: ParamDefinition | undefined): unknown {
   const trimmed = raw.trim();
@@ -51,9 +109,6 @@ function tryCoerce(raw: string, def: ParamDefinition | undefined): unknown {
   }
   return raw;
 }
-
-const FP_PREFIX = 'fp.';
-const hasWindow = typeof window !== 'undefined';
 
 /** Single param state with value and source */
 export interface ParamState<T> {
