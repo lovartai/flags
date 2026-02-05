@@ -1,0 +1,53 @@
+# Canary 测试版发布
+# 触发时机: PR 创建或有新提交
+name: Canary
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  canary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm test
+
+      # 生成 canary 版本号: 1.0.0-canary.pr123.abc1234
+      - name: Set canary version
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          VERSION=$(node -p "require('./package.json').version")
+          CANARY_VERSION="${VERSION}-canary.pr${{ github.event.pull_request.number }}.${SHORT_SHA}"
+          npm version $CANARY_VERSION --no-git-tag-version
+          echo "CANARY_VERSION=$CANARY_VERSION" >> $GITHUB_ENV
+
+      - run: pnpm publish --tag canary --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_RELEASE_TOKEN }}
+
+      # 在 PR 中评论版本信息
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = process.env.CANARY_VERSION;
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `📦 **Canary version published!**\n\n\`\`\`bash\npnpm add statsig@${version}\n# or\npnpm add statsig@canary\n\`\`\``
+            });
