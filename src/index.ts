@@ -14,6 +14,9 @@ export { createFlagStore, FlagStore, parseUrlOverrides, type ResolveOptions } fr
 export {
   createParamStore,
   defineParam,
+  PARAM_SCHEMA_MISMATCH_EVENT,
+  type ParamSchemaMismatchDetail,
+  parseParamStoreUrlOverrides,
   ParamStore,
   type ParamDefinition,
   type ParamResolveOptions,
@@ -27,7 +30,13 @@ export {
 export { getLogger, type Logger } from './logger';
 
 // Statsig integration
-export { getStatsigClientSync, initStatsigClient, isTestEnv, type InitOptions } from './statsig';
+export {
+  getStatsigClientSync,
+  initStatsigClient,
+  isTestEnv,
+  type InitOptions,
+  type StatsigBootstrap,
+} from './statsig';
 
 // Core types
 export {

@@ -7,4 +7,5 @@ export {
   initStatsigClient,
   isTestEnv,
   type InitOptions,
+  type StatsigBootstrap,
 } from './client';
