@@ -1,13 +1,20 @@
 # Canary 测试版发布
-# 触发时机: PR 创建或有新提交
+# 触发时机: feat/fix/refactor/test 分支的 PR 创建或有新提交
 name: Canary
 
 on:
   pull_request:
     types: [opened, synchronize]
+    branches: [main]
 
 jobs:
   canary:
+    # 只对特定分支前缀发布 canary
+    if: |
+      startsWith(github.head_ref, 'feat/') ||
+      startsWith(github.head_ref, 'fix/') ||
+      startsWith(github.head_ref, 'refactor/') ||
+      startsWith(github.head_ref, 'test/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
