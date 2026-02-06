@@ -3,7 +3,7 @@
  * Use createParamStore to create type-safe parameter stores and hooks.
  */
 
-import { merge, set } from 'lodash';
+import { merge, set } from 'lodash-es';
 import { useParameterStore } from '@statsig/react-bindings';
 import z from 'zod';
 
