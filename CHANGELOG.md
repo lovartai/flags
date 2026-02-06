@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/lovartai/flags/compare/flags-v0.0.3...flags-v0.0.4) (2026-02-06)
+
+
+### Bug Fixes
+
+* graceful fallback when statsig client is not initialized ([#11](https://github.com/lovartai/flags/issues/11)) ([b64c7b2](https://github.com/lovartai/flags/commit/b64c7b2f61da6388d6c58079140131e6a537b12f))
+
 ## [0.0.3](https://github.com/lovartai/flags/compare/flags-v0.0.2...flags-v0.0.3) (2026-02-06)
 
 
