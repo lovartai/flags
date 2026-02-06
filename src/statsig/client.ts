@@ -109,7 +109,7 @@ export function initStatsigClient(
  */
 export function getStatsigClientSync(): StatsigClient {
   if (!client) {
-    throw new Error('[@lovart-open/statsig] Not initialized. Call initStatsigClient() first.');
+    throw new Error('[@lovart-open/flags/statsig] Not initialized. Call initStatsigClient() first.');
   }
   return client;
 }

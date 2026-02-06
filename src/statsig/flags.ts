@@ -88,11 +88,15 @@ export class FlagStore<TDefinitions extends Record<string, FlagDefinition>> {
     }
 
     // 4. Remote value from Statsig
-    const currentGate = gate ?? getStatsigClientSync().getFeatureGate(keyStr, evaluationOptions);
-    return {
-      flag: currentGate.value,
-      source: currentGate.idType ? 'remote' : 'fallback',
-    };
+    try {
+      const currentGate = gate ?? getStatsigClientSync().getFeatureGate(keyStr, evaluationOptions);
+      return {
+        flag: currentGate.value,
+        source: currentGate.idType ? 'remote' : 'fallback',
+      };
+    } catch {
+      return { flag: false, source: 'fallback' };
+    }
   }
 }
 
