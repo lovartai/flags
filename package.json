@@ -2,24 +2,27 @@
   "name": "@lovart-open/flags",
   "version": "0.0.2",
   "description": "Feature flag management with multi-layer priority system (client-side)",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./statsig": {
-      "types": "./src/statsig/index.ts",
-      "default": "./src/statsig/index.ts"
+      "types": "./dist/statsig/index.d.ts",
+      "import": "./dist/statsig/index.js"
     }
   },
   "files": [
-    "src"
+    "dist"
   ],
   "scripts": {
+    "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [
     "feature-flag",
