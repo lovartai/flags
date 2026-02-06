@@ -1,6 +1,6 @@
 {
   "name": "@lovart-open/flags",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Feature flag management with multi-layer priority system (client-side)",
   "type": "module",
   "main": "./dist/index.js",
