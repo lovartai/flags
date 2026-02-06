@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
-    "@types/lodash": "^4.17.0",
     "@types/lodash-es": "^4.17.12",
     "@types/react": "^18.0.0 || ^19.0.0",
     "jsdom": "^23.0.1",
