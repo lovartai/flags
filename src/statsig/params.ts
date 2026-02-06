@@ -245,12 +245,17 @@ export class ParamStore<TStores extends Record<string, ParamStoreDefinition<any>
     }
     // 4. Remote value from Statsig
     else {
-      const clientStore = statsigStore ?? getStatsigClientSync().getParameterStore(storeKey as string, evaluationOptions);
-      const config = (clientStore as any)?.__configuration?.[paramKey as string];
-      if (config !== undefined) {
-        value = clientStore.get(paramKey as string, def.fallback);
-        source = 'remote';
-      } else {
+      try {
+        const clientStore = statsigStore ?? getStatsigClientSync().getParameterStore(storeKey as string, evaluationOptions);
+        const config = (clientStore as any)?.__configuration?.[paramKey as string];
+        if (config !== undefined) {
+          value = clientStore.get(paramKey as string, def.fallback);
+          source = 'remote';
+        } else {
+          value = def.fallback;
+          source = 'fallback';
+        }
+      } catch {
         value = def.fallback;
         source = 'fallback';
       }
