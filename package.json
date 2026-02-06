@@ -36,12 +36,13 @@
   "dependencies": {
     "@statsig/js-client": "^3.30.0",
     "@statsig/react-bindings": "^3.30.2",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.23",
     "zod": "^3.23.0"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
     "@types/lodash": "^4.17.0",
+    "@types/lodash-es": "^4.17.12",
     "@types/react": "^18.0.0 || ^19.0.0",
     "jsdom": "^23.0.1",
     "tsup": "^8.5.1",
