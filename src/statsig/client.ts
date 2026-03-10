@@ -40,6 +40,12 @@ export interface InitOptions extends StatsigOptions {
    * The data will be set before initializeSync() is called.
    */
   bootstrap?: StatsigBootstrap | null;
+
+  /**
+   * Skip singleton cache and create a new client instance.
+   * Use this for SSR where each request needs its own client with fresh bootstrap data.
+   */
+  forceNew?: boolean;
 }
 
 /**
@@ -65,9 +71,9 @@ export function initStatsigClient(
   user: StatsigUser,
   options?: InitOptions,
 ): StatsigClient {
-  if (client) return client;
+  const { isTestEnv, logger, bootstrap, forceNew, ...statsigOptions } = options ?? {};
 
-  const { isTestEnv, logger, bootstrap, ...statsigOptions } = options ?? {};
+  if (!forceNew && client) return client;
 
   // Set custom logger
   if (logger) {
@@ -91,15 +97,20 @@ export function initStatsigClient(
     log(`Initializing in default mode (userID: '${user.userID}')`);
   }
 
-  client = new StatsigClient(clientKey, user, statsigOptions);
+  const instance = new StatsigClient(clientKey, user, statsigOptions);
 
   // Set bootstrap data before initializeSync (enables zero-network init)
   if (bootstrap?.data) {
-    client.dataAdapter.setData(bootstrap.data);
+    instance.dataAdapter.setData(bootstrap.data);
   }
 
-  client.initializeSync();
-  return client;
+  instance.initializeSync();
+
+  if (!forceNew) {
+    client = instance;
+  }
+
+  return instance;
 }
 
 /**
