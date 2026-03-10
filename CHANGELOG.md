@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.5](https://github.com/lovartai/flags/compare/flags-v0.0.4...flags-v0.0.5) (2026-03-10)
+
+
+### Bug Fixes
+
+* add forceNew option to bypass singleton for SSR ([#13](https://github.com/lovartai/flags/issues/13)) ([3cf8cbf](https://github.com/lovartai/flags/commit/3cf8cbfa7df17d7218b41786b6ba59a611908995))
+
 ## [0.0.4](https://github.com/lovartai/flags/compare/flags-v0.0.3...flags-v0.0.4) (2026-02-06)
 
 
