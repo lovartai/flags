@@ -67,7 +67,10 @@ export class FlagStore<TDefinitions extends Record<string, FlagDefinition>> {
   resolve<K extends keyof TDefinitions>(key: K, options?: ResolveOptions): FlagState {
     const { gate, search, ...evaluationOptions } = options ?? {};
     const def = this.definitions[key];
+    // Unknown key: nothing declared, so there is no fallback to honour either
     if (!def) return { flag: false, source: 'fallback' };
+
+    const fallback = def.fallback ?? false;
 
     const keyStr = key as string;
 
@@ -90,12 +93,14 @@ export class FlagStore<TDefinitions extends Record<string, FlagDefinition>> {
     // 4. Remote value from Statsig
     try {
       const currentGate = gate ?? getStatsigClientSync().getFeatureGate(keyStr, evaluationOptions);
-      return {
-        flag: currentGate.value,
-        source: currentGate.idType ? 'remote' : 'fallback',
-      };
+      // No idType means the client never evaluated this gate against a user
+      // (not initialized, or the gate is unknown remotely). The gate's `value`
+      // is not a real remote answer in that case, so honour the declared
+      // fallback instead of passing it through.
+      if (!currentGate.idType) return { flag: fallback, source: 'fallback' };
+      return { flag: currentGate.value, source: 'remote' };
     } catch {
-      return { flag: false, source: 'fallback' };
+      return { flag: fallback, source: 'fallback' };
     }
   }
 }

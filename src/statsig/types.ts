@@ -31,6 +31,14 @@ export interface FlagDefinition {
   override?: boolean;
   /** Mark as kept locally (no remote config needed) */
   keep?: boolean;
+  /**
+   * Value to use when no remote value is available — client not initialized,
+   * evaluation threw, or the definition is missing remotely. Defaults to `false`.
+   *
+   * Mirrors `defineParam({ fallback })` on the param store side, which has had
+   * this since the beginning; flags were the asymmetric one.
+   */
+  fallback?: boolean;
 }
 
 /**

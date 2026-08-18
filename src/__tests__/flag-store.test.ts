@@ -17,6 +17,7 @@ describe('FlagStore', () => {
     feature_a: { description: 'Feature A' },
     feature_b: { description: 'Feature B', testOverride: true },
     feature_c: { description: 'Feature C', override: false },
+    feature_d: { description: 'Feature D', fallback: true },
   } as const satisfies Record<string, FlagDefinition>;
 
   const { flagStore } = createFlagStore(mockFlags);
@@ -77,6 +78,49 @@ describe('FlagStore', () => {
       const state = flagStore.getFlagState('feature_a');
       expect(state.source).toBe('remote');
       expect(state.flag).toBe(true);
+    });
+  });
+
+  describe('Declared fallback', () => {
+    it('uses the declared fallback when the client never evaluated the gate', () => {
+      // idType 为空 = client 没拿这个 gate 对用户求过值（未初始化 / 远端没有这个 gate）
+      mockGetFeatureGate.mockReturnValue({ value: false, idType: '' });
+      const state = flagStore.getFlagState('feature_d');
+      expect(state.flag).toBe(true);
+      expect(state.source).toBe('fallback');
+    });
+
+    it('does not pass through the gate value when source is fallback', () => {
+      // 旧行为：source 标 fallback，flag 却取 currentGate.value —— 声明的兜底被无视
+      mockGetFeatureGate.mockReturnValue({ value: false, idType: '' });
+      expect(flagStore.getFlag('feature_d')).toBe(true);
+
+      mockGetFeatureGate.mockReturnValue({ value: true, idType: '' });
+      const a = flagStore.getFlagState('feature_a'); // 未声明 fallback
+      expect(a.flag).toBe(false);
+      expect(a.source).toBe('fallback');
+    });
+
+    it('uses the declared fallback when evaluation throws', () => {
+      mockGetFeatureGate.mockImplementation(() => {
+        throw new Error('client not initialized');
+      });
+      expect(flagStore.getFlag('feature_d')).toBe(true);
+      expect(flagStore.getFlag('feature_a')).toBe(false);
+    });
+
+    it('real remote value still wins over the declared fallback', () => {
+      mockGetFeatureGate.mockReturnValue({ value: false, idType: 'userID' });
+      const state = flagStore.getFlagState('feature_d');
+      expect(state.flag).toBe(false);
+      expect(state.source).toBe('remote');
+    });
+
+    it('defaults to false when no fallback is declared', () => {
+      mockGetFeatureGate.mockReturnValue({ value: false, idType: '' });
+      const state = flagStore.getFlagState('feature_a');
+      expect(state.flag).toBe(false);
+      expect(state.source).toBe('fallback');
     });
   });
 
